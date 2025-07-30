@@ -22,14 +22,13 @@ class AW_INTERACTIONSYSTEM_API UInteractIconWidget : public UUserWidget
 public:
 	virtual void NativePreConstruct() override;
 
-	void Init(const EInteractCategory NewInteractCategory,
-	          const EInteractType NewInteractType,
-	          const float NewMinIconOpacity,
-	          const FVector2D NewIconSize,
-	          const float NewMinProgressCircleOpacity,
-	          const FVector2D NewProgressCircleSize);
+	void Init(
+		const EInteractType NewInteractType,
+		const float NewMinIconOpacity,
+		const FVector2D NewIconSize,
+		const float NewMinProgressCircleOpacity,
+		const FVector2D NewProgressCircleSize);
 
-	void SetInteractCategory(const EInteractCategory InInteractCategory);
 	void SetIconSize(const FVector2D Size) const;
 	void SetIconOpacity(const float Opacity);
 
@@ -38,8 +37,6 @@ public:
 	void SetProgressCirclePercent(const float Percent);
 
 private:
-	UPROPERTY(EditAnywhere, Category=Interact)
-	EInteractCategory InteractCategory;
 	UPROPERTY(EditAnywhere, Category=Interact)
 	EInteractType InteractType;
 
@@ -63,13 +60,5 @@ private:
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UProgressCircle> ProgressCircle;
 	UPROPERTY(meta=(BindWidget))
-	TObjectPtr<UWidgetSwitcher> IconSwitcher;
-	UPROPERTY(meta=(BindWidget))
-	TObjectPtr<UImage> CollectIcon;
-	UPROPERTY(meta=(BindWidget))
-	TObjectPtr<UImage> OpenIcon;
-	UPROPERTY(meta=(BindWidget))
-	TObjectPtr<UImage> UseIcon;
-	UPROPERTY(meta=(BindWidget))
-	TObjectPtr<UImage> UnlockIcon;
+	TObjectPtr<UImage> Icon;
 };

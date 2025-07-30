@@ -6,11 +6,31 @@
 #include "EnhancedInputSubsystems.h"
 #include "Enums.h"
 #include "InteractInterface.h"
+#include "InputAction.h"
+#include "InputMappingContext.h"
 
 
 UInteractComponent::UInteractComponent()
 {
 	PrimaryComponentTick.bCanEverTick = true;
+
+	static ConstructorHelpers::FObjectFinder<UInputMappingContext> MappingContextFinder(TEXT("/AW_InteractionSystem/Input/IMC_Interact.IMC_Interact"));
+	if (MappingContextFinder.Succeeded())
+	{
+		InteractMappingContext = MappingContextFinder.Object;
+	}
+
+	static ConstructorHelpers::FObjectFinder<UInputAction> PressActionFinder(TEXT("/AW_InteractionSystem/Input/Actions/IA_Interact_Press.IA_Interact_Press"));
+	if (PressActionFinder.Succeeded())
+	{
+		InteractPressAction = PressActionFinder.Object;
+	}
+
+	static ConstructorHelpers::FObjectFinder<UInputAction> HoldActionFinder(TEXT("/AW_InteractionSystem/Input/Actions/IA_Interact_Hold.IA_Interact_Hold"));
+	if (HoldActionFinder.Succeeded())
+	{
+		InteractHoldAction = HoldActionFinder.Object;
+	}
 }
 
 void UInteractComponent::BeginPlay()

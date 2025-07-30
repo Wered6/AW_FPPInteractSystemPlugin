@@ -2,7 +2,6 @@
 
 
 #include "InteractableComponent.h"
-
 #include "InteractIconWidget.h"
 #include "InteractInterface.h"
 #include "BaseClasses/InteractableActorBase.h"
@@ -66,18 +65,12 @@ void UInteractableComponent::SetOutlineMeshComponents(const TArray<UMeshComponen
 	OutlineMeshComponents = NewOutlineMeshComponents;
 }
 
-void UInteractableComponent::SetInteractCategory(const EInteractCategory InInteractCategory) const
-{
-	InteractIconWidget->SetInteractCategory(InInteractCategory);
-}
-
 void UInteractableComponent::InitializeInteractWidget()
 {
 	InteractIconWidget = CreateWidget<UInteractIconWidget>(GetWorld(), InteractIconWidgetClass);
 	InteractIconWidgetComponent = NewObject<UWidgetComponent>(this, TEXT("Interact Icon Widget Component"));
 
-	InteractIconWidget->Init(InteractCategory,
-	                         InteractType,
+	InteractIconWidget->Init(InteractType,
 	                         MinIconOpacity,
 	                         IconSize,
 	                         MinProgressCircleOpacity,

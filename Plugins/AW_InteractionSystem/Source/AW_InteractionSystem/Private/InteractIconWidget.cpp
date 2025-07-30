@@ -4,13 +4,10 @@
 #include "InteractIconWidget.h"
 #include "ProgressCircle.h"
 #include "Components/Image.h"
-#include "Components/WidgetSwitcher.h"
 
 void UInteractIconWidget::NativePreConstruct()
 {
 	Super::NativePreConstruct();
-
-	SetInteractCategory(InteractCategory);
 
 	switch (InteractType)
 	{
@@ -30,48 +27,23 @@ void UInteractIconWidget::NativePreConstruct()
 	SetIconSize(IconSize);
 }
 
-void UInteractIconWidget::Init(const EInteractCategory NewInteractCategory,
-                               const EInteractType NewInteractType,
-                               const float NewMinIconOpacity,
-                               const FVector2D NewIconSize,
-                               const float NewMinProgressCircleOpacity,
-                               const FVector2D NewProgressCircleSize)
+void UInteractIconWidget::Init(
+	const EInteractType NewInteractType,
+	const float NewMinIconOpacity,
+	const FVector2D NewIconSize,
+	const float NewMinProgressCircleOpacity,
+	const FVector2D NewProgressCircleSize)
 {
-	InteractCategory = NewInteractCategory;
 	InteractType = NewInteractType;
 	MinIconOpacity = NewMinIconOpacity;
+	IconSize = NewIconSize;
 	MinProgressCircleOpacity = NewMinProgressCircleOpacity;
 	ProgressCircleSize = NewProgressCircleSize;
 }
 
-void UInteractIconWidget::SetInteractCategory(const EInteractCategory InInteractCategory)
-{
-	switch (InInteractCategory)
-	{
-	case EInteractCategory::Use:
-		IconSwitcher->SetActiveWidget(UseIcon);
-		break;
-	case EInteractCategory::Collect:
-		IconSwitcher->SetActiveWidget(CollectIcon);
-		break;
-	case EInteractCategory::Open:
-		IconSwitcher->SetActiveWidget(OpenIcon);
-		break;
-	case EInteractCategory::Unlock:
-		IconSwitcher->SetActiveWidget(UnlockIcon);
-		break;
-	}
-}
-
 void UInteractIconWidget::SetIconSize(const FVector2D Size) const
 {
-	for (UWidget* Icon : IconSwitcher->GetAllChildren())
-	{
-		if (UImage* ImageIcon{Cast<UImage>(Icon)})
-		{
-			ImageIcon->SetDesiredSizeOverride(Size);
-		}
-	}
+	Icon->SetDesiredSizeOverride(Size);
 }
 
 void UInteractIconWidget::SetIconOpacity(const float Opacity)
@@ -84,7 +56,7 @@ void UInteractIconWidget::SetIconOpacity(const float Opacity)
 	constexpr float MaxLerpOpacity{1.f};
 	CurrentIconOpacity = FMath::Lerp(MinLerpOpacity, MaxLerpOpacity, Alpha);
 
-	IconSwitcher->SetRenderOpacity(CurrentIconOpacity);
+	Icon->SetOpacity(CurrentIconOpacity);
 }
 
 void UInteractIconWidget::SetProgressCircleSize(const FVector2D Size) const

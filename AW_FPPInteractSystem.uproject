@@ -17,6 +17,10 @@
 			"TargetAllowList": [
 				"Editor"
 			]
+		},
+		{
+			"Name": "AW_InteractionSystem",
+			"Enabled": true
 		}
 	]
 }

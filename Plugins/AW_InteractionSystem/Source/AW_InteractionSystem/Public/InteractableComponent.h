@@ -45,11 +45,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category=Interact)
 	void SetOutlineMeshComponents(const TArray<UMeshComponent*>& NewOutlineMeshComponents);
 
-	UFUNCTION(BlueprintCallable, Category=Interact)
-	void SetInteractCategory(const EInteractCategory InInteractCategory) const;
-
-	UPROPERTY(EditAnywhere, Category=Interact)
-	EInteractCategory InteractCategory{};
 	UPROPERTY(EditAnywhere, Category=Interact)
 	EInteractType InteractType{};
 

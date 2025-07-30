@@ -62,11 +62,11 @@ private:
 	void InteractHoldTriggered();
 	void InteractHoldCompleted();
 
-	UPROPERTY(EditDefaultsOnly, Category="Interact|Input")
+	UPROPERTY()
 	TObjectPtr<UInputMappingContext> InteractMappingContext;
-	UPROPERTY(EditDefaultsOnly, Category="Interact|Input")
+	UPROPERTY()
 	TObjectPtr<UInputAction> InteractPressAction;
-	UPROPERTY(EditDefaultsOnly, Category="Interact|Input")
+	UPROPERTY()
 	TObjectPtr<UInputAction> InteractHoldAction;
 
 	bool bIsHolding{false};
