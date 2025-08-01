@@ -111,6 +111,7 @@ void UInteractComponent::PerformInteractionCheck()
 
 	// Check if a custom interaction area is used
 	const bool bUsesCustomInteractArea{IInteractInterface::Execute_DoesUseCustomInteractArea(HitActor)};
+	AActor* InteractableActorDeref{InteractableActor.Get()};
 
 	// Early return if hits the same Actor
 	// If using a custom interaction area, compare components
@@ -119,21 +120,21 @@ void UInteractComponent::PerformInteractionCheck()
 		return;
 	}
 	// If not using a custom interaction area, compare actors
-	if (!bUsesCustomInteractArea && HitActor == InteractableActor)
+	if (!bUsesCustomInteractArea && HitActor == InteractableActorDeref)
 	{
 		return;
 	}
 
 	// Hide UI from a previously focused interactable actor
-	if (InteractableActor)
+	if (InteractableActorDeref)
 	{
-		IInteractInterface::Execute_DisplayInteractionUI(InteractableActor, false);
+		IInteractInterface::Execute_DisplayInteractionUI(InteractableActorDeref, false);
 	}
 
 	// Depending on custom area usage, set or clear interaction
 	if (bUsesCustomInteractArea)
 	{
-		if (HitComponent->GetCollisionProfileName() == FName("InteractArea"))
+		if (HitComponent->GetCollisionProfileName() == TEXT("InteractArea"))
 		{
 			SetInteraction(HitActor, HitComponent);
 		}
@@ -162,9 +163,9 @@ void UInteractComponent::ClearInteraction()
 		InteractHoldCanceled();
 	}
 
-	if (InteractableActor)
+	if (AActor* InteractableActorDeref{InteractableActor.Get()})
 	{
-		IInteractInterface::Execute_DisplayInteractionUI(InteractableActor, false);
+		IInteractInterface::Execute_DisplayInteractionUI(InteractableActorDeref, false);
 		InteractableActor = nullptr;
 		InteractableHitComponent = nullptr;
 	}
@@ -172,31 +173,35 @@ void UInteractComponent::ClearInteraction()
 
 void UInteractComponent::InteractPressStarted()
 {
-	if (InteractableActor && InteractableActor->Implements<UInteractInterface>() && IInteractInterface::Execute_GetInteractType(InteractableActor) == EInteractType::Press)
+	AActor* InteractableActorDeref{InteractableActor.Get()};
+	if (InteractableActorDeref && InteractableActorDeref->Implements<UInteractInterface>() && IInteractInterface::Execute_GetInteractType(InteractableActorDeref) == EInteractType::Press)
 	{
-		IInteractInterface::Execute_InteractPressStarted(InteractableActor, PawnOwner);
+		IInteractInterface::Execute_InteractPressStarted(InteractableActorDeref, PawnOwner.Get());
 	}
 }
 
 void UInteractComponent::InteractPressTriggered()
 {
-	if (InteractableActor && InteractableActor->Implements<UInteractInterface>() && IInteractInterface::Execute_GetInteractType(InteractableActor) == EInteractType::Press)
+	AActor* InteractableActorDeref{InteractableActor.Get()};
+	if (InteractableActorDeref && InteractableActorDeref->Implements<UInteractInterface>() && IInteractInterface::Execute_GetInteractType(InteractableActorDeref) == EInteractType::Press)
 	{
-		IInteractInterface::Execute_InteractPressTriggered(InteractableActor);
+		IInteractInterface::Execute_InteractPressTriggered(InteractableActorDeref);
 	}
 }
 
 void UInteractComponent::InteractPressCompleted()
 {
-	if (InteractableActor && InteractableActor->Implements<UInteractInterface>() && IInteractInterface::Execute_GetInteractType(InteractableActor) == EInteractType::Press)
+	AActor* InteractableActorDeref{InteractableActor.Get()};
+	if (InteractableActorDeref && InteractableActorDeref->Implements<UInteractInterface>() && IInteractInterface::Execute_GetInteractType(InteractableActorDeref) == EInteractType::Press)
 	{
-		IInteractInterface::Execute_InteractPressCompleted(InteractableActor);
+		IInteractInterface::Execute_InteractPressCompleted(InteractableActorDeref);
 	}
 }
 
 void UInteractComponent::InteractHoldStarted(const FInputActionInstance& Instance)
 {
-	if (!InteractableActor || !InteractableActor->Implements<UInteractInterface>() || IInteractInterface::Execute_GetInteractType(InteractableActor) != EInteractType::Hold)
+	AActor* InteractableActorDeref{InteractableActor.Get()};
+	if (!InteractableActorDeref || !InteractableActorDeref->Implements<UInteractInterface>() || IInteractInterface::Execute_GetInteractType(InteractableActorDeref) != EInteractType::Hold)
 	{
 		return;
 	}
@@ -205,7 +210,7 @@ void UInteractComponent::InteractHoldStarted(const FInputActionInstance& Instanc
 	{
 		if (UInputTriggerHold* TriggerHold{Cast<UInputTriggerHold>(Trigger)})
 		{
-			TriggerHold->HoldTimeThreshold = IInteractInterface::Execute_InteractHoldStarted(InteractableActor, PawnOwner);
+			TriggerHold->HoldTimeThreshold = IInteractInterface::Execute_InteractHoldStarted(InteractableActorDeref, PawnOwner.Get());
 			break;
 		}
 	}
@@ -215,36 +220,40 @@ void UInteractComponent::InteractHoldStarted(const FInputActionInstance& Instanc
 
 void UInteractComponent::InteractHoldOngoing(const FInputActionInstance& Instance)
 {
-	if (bIsHolding && InteractableActor && InteractableActor->Implements<UInteractInterface>() && IInteractInterface::Execute_GetInteractType(InteractableActor) == EInteractType::Hold)
+	AActor* InteractableActorDeref{InteractableActor.Get()};
+	if (bIsHolding && InteractableActorDeref && InteractableActorDeref->Implements<UInteractInterface>() && IInteractInterface::Execute_GetInteractType(InteractableActorDeref) == EInteractType::Hold)
 	{
-		IInteractInterface::Execute_InteractHoldOngoing(InteractableActor, Instance.GetElapsedTime());
+		IInteractInterface::Execute_InteractHoldOngoing(InteractableActorDeref, Instance.GetElapsedTime());
 	}
 }
 
 void UInteractComponent::InteractHoldCanceled()
 {
-	if (bIsHolding && InteractableActor && InteractableActor->Implements<UInteractInterface>() && IInteractInterface::Execute_GetInteractType(InteractableActor) == EInteractType::Hold)
+	AActor* InteractableActorDeref{InteractableActor.Get()};
+	if (bIsHolding && InteractableActorDeref && InteractableActorDeref->Implements<UInteractInterface>() && IInteractInterface::Execute_GetInteractType(InteractableActorDeref) == EInteractType::Hold)
 	{
 		bIsHolding = false;
 
-		IInteractInterface::Execute_InteractHoldCanceled(InteractableActor);
+		IInteractInterface::Execute_InteractHoldCanceled(InteractableActorDeref);
 	}
 }
 
 void UInteractComponent::InteractHoldTriggered()
 {
-	if (bIsHolding && InteractableActor && InteractableActor->Implements<UInteractInterface>() && IInteractInterface::Execute_GetInteractType(InteractableActor) == EInteractType::Hold)
+	AActor* InteractableActorDeref{InteractableActor.Get()};
+	if (bIsHolding && InteractableActorDeref && InteractableActorDeref->Implements<UInteractInterface>() && IInteractInterface::Execute_GetInteractType(InteractableActorDeref) == EInteractType::Hold)
 	{
-		IInteractInterface::Execute_InteractHoldTriggered(InteractableActor);
+		IInteractInterface::Execute_InteractHoldTriggered(InteractableActorDeref);
 	}
 }
 
 void UInteractComponent::InteractHoldCompleted()
 {
-	if (bIsHolding && InteractableActor && InteractableActor->Implements<UInteractInterface>() && IInteractInterface::Execute_GetInteractType(InteractableActor) == EInteractType::Hold)
+	AActor* InteractableActorDeref{InteractableActor.Get()};
+	if (bIsHolding && InteractableActorDeref && InteractableActorDeref->Implements<UInteractInterface>() && IInteractInterface::Execute_GetInteractType(InteractableActorDeref) == EInteractType::Hold)
 	{
 		bIsHolding = false;
 
-		IInteractInterface::Execute_InteractHoldCompleted(InteractableActor);
+		IInteractInterface::Execute_InteractHoldCompleted(InteractableActorDeref);
 	}
 }

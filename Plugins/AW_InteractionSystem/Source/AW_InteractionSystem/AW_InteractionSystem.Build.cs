@@ -28,10 +28,6 @@ public class AW_InteractionSystem : ModuleRules
 			new string[]
 			{
 				"Core",
-				"CoreUObject",
-				"Engine",
-				"EnhancedInput",
-				"UMG",
 				// ... add other public dependencies that you statically link with here ...
 			}
 		);
@@ -40,8 +36,12 @@ public class AW_InteractionSystem : ModuleRules
 		PrivateDependencyModuleNames.AddRange(
 			new string[]
 			{
+				"CoreUObject",
+				"Engine",
 				"Slate",
 				"SlateCore",
+				"UMG",
+				"EnhancedInput",
 				// ... add private dependencies that you statically link with here ...
 			}
 		);

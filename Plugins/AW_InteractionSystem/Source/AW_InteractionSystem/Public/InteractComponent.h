@@ -35,20 +35,17 @@ private:
 	void SetInteraction(AActor* InteractedActor, UPrimitiveComponent* InteractedComponent);
 	void ClearInteraction();
 
-	UPROPERTY(VisibleAnywhere, Category=Interact)
-	TObjectPtr<AActor> InteractableActor;
-	UPROPERTY()
-	TObjectPtr<UPrimitiveComponent> InteractableHitComponent;
+	// TODO draw debug message in a corner
+	TWeakObjectPtr<AActor> InteractableActor;
+	TWeakObjectPtr<UPrimitiveComponent> InteractableHitComponent;
 
 	UPROPERTY(EditAnywhere, Category=Interact)
 	float InteractionDistance{200.f};
 	UPROPERTY(VisibleAnywhere, Category=Interact)
 	bool bCanCheckInteraction{true};
 
-	UPROPERTY()
-	TObjectPtr<APawn> PawnOwner;
-	UPROPERTY()
-	TObjectPtr<APlayerController> PlayerController;
+	TWeakObjectPtr<APawn> PawnOwner;
+	TWeakObjectPtr<APlayerController> PlayerController;
 
 #pragma region Input
 
@@ -62,11 +59,11 @@ private:
 	void InteractHoldTriggered();
 	void InteractHoldCompleted();
 
-	UPROPERTY()
+	UPROPERTY(EditDefaultsOnly, Category=Interact)
 	TObjectPtr<UInputMappingContext> InteractMappingContext;
-	UPROPERTY()
+	UPROPERTY(EditDefaultsOnly, Category=Interact)
 	TObjectPtr<UInputAction> InteractPressAction;
-	UPROPERTY()
+	UPROPERTY(EditDefaultsOnly, Category=Interact)
 	TObjectPtr<UInputAction> InteractHoldAction;
 
 	bool bIsHolding{false};

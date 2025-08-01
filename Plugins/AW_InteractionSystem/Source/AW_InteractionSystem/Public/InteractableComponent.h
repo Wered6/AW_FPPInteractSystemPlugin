@@ -37,7 +37,7 @@ public:
 
 	FORCEINLINE AActor* GetInteractInstigator() const
 	{
-		return InteractInstigator;
+		return InteractInstigator.Get();
 	}
 
 	UFUNCTION(BlueprintCallable, Category=Interact)
@@ -72,10 +72,7 @@ private:
 
 	void UpdateOutline(const bool bHighlight);
 
-	UPROPERTY(VisibleInstanceOnly, Category=Interact)
-	TObjectPtr<AActor> InteractInstigator;
-
-	UPROPERTY()
+	TWeakObjectPtr<AActor> InteractInstigator;
 	TArray<TObjectPtr<UMeshComponent>> OutlineMeshComponents;
 
 	UPROPERTY(EditDefaultsOnly, meta=(DisplayPriority=0), Category=Interact)
