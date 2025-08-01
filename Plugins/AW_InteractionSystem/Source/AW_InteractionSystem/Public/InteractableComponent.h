@@ -73,6 +73,8 @@ private:
 	void UpdateOutline(const bool bHighlight);
 
 	TWeakObjectPtr<AActor> InteractInstigator;
+	TWeakObjectPtr<AActor> ActorOwner;
+
 	TArray<TObjectPtr<UMeshComponent>> OutlineMeshComponents;
 
 	UPROPERTY(EditDefaultsOnly, meta=(DisplayPriority=0), Category=Interact)

@@ -14,6 +14,12 @@ DEFINE_LOG_CATEGORY_CLASS(UInteractableComponent, LogInteractableComponent);
 UInteractableComponent::UInteractableComponent()
 {
 	PrimaryComponentTick.bCanEverTick = false;
+
+	static ConstructorHelpers::FClassFinder<UInteractIconWidget> InteractIconWidgetClassFinder(TEXT("/AW_InteractionSystem/WBP_InteractIcon"));
+	if (InteractIconWidgetClassFinder.Succeeded())
+	{
+		InteractIconWidgetClass = InteractIconWidgetClassFinder.Class;
+	}
 }
 
 void UInteractableComponent::BeginPlay()
@@ -28,8 +34,10 @@ void UInteractableComponent::OnRegister()
 {
 	Super::OnRegister();
 
-	// TODO try make it member of class in .h
-	const AActor* Owner{GetOwner()};
+	if (!ActorOwner.IsValid())
+	{
+		ActorOwner = GetOwner();
+	}
 
 	UClass* InteractableActorBaseClass{AInteractableActorBase::StaticClass()};
 	UClass* InteractablePawnBaseClass{AInteractablePawnBase::StaticClass()};
@@ -37,9 +45,9 @@ void UInteractableComponent::OnRegister()
 
 	const bool bIsOwnerACorrectClass
 	{
-		Owner->IsA(InteractableActorBaseClass) ||
-		Owner->IsA(InteractablePawnBaseClass) ||
-		Owner->IsA(InteractableCharacterBaseClass)
+		ActorOwner->IsA(InteractableActorBaseClass) ||
+		ActorOwner->IsA(InteractablePawnBaseClass) ||
+		ActorOwner->IsA(InteractableCharacterBaseClass)
 	};
 	if (!bIsOwnerACorrectClass)
 	{
@@ -47,7 +55,7 @@ void UInteractableComponent::OnRegister()
 		       Error,
 		       TEXT("%s owned by %s. Component must be owned by a %s, %s or %s"),
 		       *GetName(),
-		       *GetNameSafe(Owner),
+		       *GetNameSafe(ActorOwner.Get()),
 		       *InteractableActorBaseClass->GetName(),
 		       *InteractablePawnBaseClass->GetName(),
 		       *InteractableCharacterBaseClass->GetName()
@@ -85,11 +93,12 @@ void UInteractableComponent::InitializeInteractWidget()
 
 void UInteractableComponent::UpdateWidgetAttachment() const
 {
-	USceneComponent* WidgetAttachComponent{IInteractInterface::Execute_GetWidgetAttachmentComponent(GetOwner())};
+	AActor* ActorOwnerDeref{ActorOwner.Get()};
+	USceneComponent* WidgetAttachComponent{IInteractInterface::Execute_GetWidgetAttachmentComponent(ActorOwnerDeref)};
 
 	if (!WidgetAttachComponent)
 	{
-		WidgetAttachComponent = GetOwner()->GetRootComponent();
+		WidgetAttachComponent = ActorOwnerDeref->GetRootComponent();
 	}
 
 	InteractIconWidgetComponent->AttachToComponent(WidgetAttachComponent, FAttachmentTransformRules::KeepRelativeTransform);
